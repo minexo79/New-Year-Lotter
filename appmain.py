@@ -54,7 +54,7 @@ def index():
         if device[1] == lotteryResult.Win:
             return render_template('index.html', ip = request.remote_addr, count = win_count, message = '恭喜得獎!')
         else:
-            return render_template('index.html', ip = request.remote_addr, count = win_count, message = '真可惜，明年再接再厲吧!')
+            return render_template('index.html', ip = request.remote_addr, count = win_count, message = '沒抽到紅包，再試一下!')
     
     return render_template('index.html', ip = request.remote_addr, count = win_count, message = '請連續點擊下方紅包')
 
@@ -72,6 +72,8 @@ def click():
     if clicks[device_id][1] == lotteryResult.Lose:
         clicks[device_id][0] = 1
         clicks[device_id][1] = lotteryResult.none
+    elif clicks[device_id][1] == lotteryResult.Win:
+        return jsonify({'message': '你已得獎，請勿重複嘗試!'})
     else:
         clicks[device_id][0] += 1
 
@@ -79,7 +81,7 @@ def click():
 
     # 50~100次隨機抽獎
     if clicks[device_id][0] >= random.randint(local_config['minClick'], local_config['maxClick']):
-        prize = random.choice(['恭喜得獎!', '真可惜，明年再接再厲吧!'])
+        prize = random.choice(['恭喜得獎!', '沒抽到紅包，再試一下!'])
         # 限制最多3個獎項
         if prize == '恭喜得獎!' and win_count < local_config['redEnvCount']:
             app.logger.info('%s win the lottery!', request.remote_addr)
