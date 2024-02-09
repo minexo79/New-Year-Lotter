@@ -47,7 +47,12 @@ class LotteryConfig(BaseView):
 
 @app.route('/')
 def index():
+    global win_count
     device_id = request.remote_addr
+
+    # 限制紅包抽獎數量
+    if (win_count >= local_config['redEnvCount']):
+        return render_template('index.html', ip = request.remote_addr, count = win_count, message = '紅包已抽完，明年再來吧!')
 
     if device_id in clicks:
         device = clicks[device_id]
