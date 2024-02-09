@@ -58,8 +58,8 @@ def index():
         device = clicks[device_id]
         if device[1] == lotteryResult.Win:
             return render_template('index.html', ip = request.remote_addr, count = win_count, message = '恭喜得獎!')
-        else:
-            return render_template('index.html', ip = request.remote_addr, count = win_count, message = '沒抽到紅包，再試一下!')
+        elif device[1] == lotteryResult.Lose:
+            return render_template('index.html', ip = request.remote_addr, count = win_count, message = '請連續點擊下方紅包')
     
     return render_template('index.html', ip = request.remote_addr, count = win_count, message = '請連續點擊下方紅包')
 
