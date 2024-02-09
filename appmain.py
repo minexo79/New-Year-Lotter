@@ -74,10 +74,7 @@ def click():
 
     # 限制每個IP只能抽一次
     # 2024.2.9 Blackcat: 改成不限制抽獎次數，若發現為lose則清除紀錄
-    if clicks[device_id][1] == lotteryResult.Lose:
-        clicks[device_id][0] = 1
-        clicks[device_id][1] = lotteryResult.none
-    elif clicks[device_id][1] == lotteryResult.Win:
+    if clicks[device_id][1] == lotteryResult.Win:
         return jsonify({'message': '你已得獎，請勿重複嘗試!'})
     else:
         clicks[device_id][0] += 1
@@ -95,7 +92,8 @@ def click():
             win_count += 1
         else:
             app.logger.info('%s lose the lottery', request.remote_addr)
-            clicks[device_id][1] = lotteryResult.Lose
+            clicks[device_id][0] = 1
+            clicks[device_id][1] = lotteryResult.none
         
         return jsonify({'message': prize})
 
